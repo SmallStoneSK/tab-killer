@@ -1,0 +1,114 @@
+/** override antd css */
+.ant-collapse {
+  border-radius: 0;
+}
+
+.ant-collapse-header {
+  background-color: #F5F5F5;
+}
+
+.app-container {
+  width: 300px;
+  height: 550px;
+  background-color: #FFF;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+.search-box {
+  padding: 9px 12px;
+  background-color: #F5F5F5;
+}
+
+.no-result-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 500px;
+}
+
+.window-header-container {
+  margin: -6px 0;
+}
+
+.window-header-status-dot {
+  display: inline-block;
+  margin-right: 12px;
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+}
+
+.window-header-status-dot.green {
+  background-color: #52C41A;
+}
+
+.window-header-status-dot.gray {
+  background-color: #DDD;
+}
+
+.window-header-subTitle-text {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.window-item-container {
+  margin: -16px;
+}
+
+.tab-item-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+}
+
+.tab-item-container:hover {
+  cursor: pointer;
+  background-color: rgba(63, 146, 247, 0.1);
+}
+
+.tab-item-title-text {
+  margin-left: 8px;
+  max-width: 210px;
+  font-size: 12px;
+}
+
+.tab-item-container.selected {
+  background-color: rgba(63, 146, 247, 1);
+}
+
+.tab-item-container.selected .tab-item-title-text {
+  color: #FFF;
+}
+
+.close-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  height: auto;
+  border: none;
+  border-radius: 0;
+  background-color: rgba(236, 91, 86, 1);
+  opacity: 0;
+  transition: 200ms opacity background-color ease-in-out;
+}
+
+.close-btn:hover {
+  background-color: rgba(236, 91, 86, 1);
+}
+
+.tab-item-container:hover .close-btn {
+  opacity: 1;
+}
+
+.close-icon {
+  font-size: 14px;
+  color: #FFF;
+}
