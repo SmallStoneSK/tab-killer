@@ -94,10 +94,15 @@ export default class App extends React.PureComponent {
 const Helper = {
   waitFor(timeout) {
     return new Promise(resolve => {
-      setTimeout(() => {
-        resolve();
-      }, timeout);
+      setTimeout(resolve, timeout);
     });
+  },
+  extractDomain(url) {
+    if(typeof url !== 'string') {
+      return 'unknown';
+    }
+    const ret = url.match(/(https?:\/\/[^/]+)/);
+    return ret ? ret[1] : 'unknown';
   },
   convertTabsData(allTabs = [], currentTab = {}) {
 
@@ -106,22 +111,43 @@ const Helper = {
       return [];
     }
 
-    // 按windowId进行分组归类
+    // 分组归类
     const hash = Object.create(null);
     for(const tab of allTabs) {
+
+      // 按windowId第一层分组
       if(!hash[tab.windowId]) {
-        hash[tab.windowId] = [];
+        hash[tab.windowId] = {};
       }
-      hash[tab.windowId].push(tab);
+
+      // 按域名第二层分组
+      const domain = Helper.extractDomain(tab.url);
+      if(!hash[tab.windowId][domain]) {
+        hash[tab.windowId][domain] = [];
+      }
+
+      hash[tab.windowId][domain].push(tab);
     }
 
-    // 将obj转成array
+    // 将hash从对象转成数组
     const data = [];
-    Object.keys(hash).forEach(key => data.push({
-      tabs: hash[key],
-      windowId: Number(key),
-      isCurWindow: Number(key) === currentTab.windowId
-    }));
+    const curDomain = Helper.extractDomain(currentTab.url);
+    Object.keys(hash).forEach(windowId => {
+      const domains =[];
+      Object.keys(hash[windowId]).forEach(domain => {
+        domains.push({
+          domain,
+          tabs: hash[windowId][domain],
+          isCurDomain: domain === curDomain
+        });
+      });
+      data.push({
+        domains,
+        windowId: Number(windowId),
+        isCurWindow: Number(windowId) === currentTab.windowId,
+        tabsCount: domains.reduce((cnt, cur) => cnt + cur.tabs.length, 0)
+      });
+    });
 
     // 进行排序，将当前窗口的顺序往上提，保证更好的体验
     data.sort((winA, winB) => {

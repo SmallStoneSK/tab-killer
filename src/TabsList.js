@@ -15,6 +15,8 @@ import {
 
 import {STATUS} from './Constans';
 
+const DEFAULT_OPEN = new Array(100).fill(null).map((_, idx) => idx.toString());
+
 export class TabsList extends React.PureComponent {
 
   static defaultProps = {
@@ -52,7 +54,7 @@ export class TabsList extends React.PureComponent {
         </div>
         <Collapse
           expandIconPosition={'right'}
-          defaultActiveKey={['0']}
+          defaultActiveKey={DEFAULT_OPEN}
         >
           {data.map((item, index) => {
             const dotColor = item.isCurWindow ? 'green' : 'gray';
@@ -65,14 +67,14 @@ export class TabsList extends React.PureComponent {
                     <span className={`window-header-status-dot ${dotColor}`}/>
                     <Typography.Text strong>{title}</Typography.Text>
                     <Typography.Text type={'secondary'} className={'window-header-subTitle-text'}>
-                      （{item.tabs.length}tabs）
+                      （{item.tabsCount}tabs）
                     </Typography.Text>
                   </Row>
                 )}
               >
                 <WindowItem
-                  tabs={item.tabs}
-                  isCurrentWindow={index === 0}
+                  domains={item.domains}
+                  isCurWindow={index === 0}
                   onRemove={onRemove}
                 />
               </Collapse.Panel>
@@ -116,22 +118,44 @@ export class TabsList extends React.PureComponent {
 
 class WindowItem extends React.PureComponent {
 
+  renderItem = item => {
+    const {isCurWindow} = this.props;
+    return <DomainItem {...item} isCurWindow={isCurWindow}/>;
+  }
+
+  render() {
+    const {domains} = this.props;
+    return (
+      <List
+        size={'small'}
+        dataSource={domains}
+        className={'window-item-container'}
+        renderItem={this.renderItem}
+      />
+    );
+  }
+}
+
+class DomainItem extends React.PureComponent {
+
   onClick = item => {
     chrome.windows.update(item.windowId, {focused: true});
     chrome.tabs.highlight({tabs: item.index, windowId: item.windowId});
   }
 
-  onClickRemove = (evt, item) => {
+  onClickRemove = (evt, ids) => {
     evt.stopPropagation();
-    chrome.tabs.remove(item.id);
+    chrome.tabs.remove(ids);
     this.props.onRemove(item);
   }
 
-  renderItem = item => {
-    const isSelected = item.highlighted && this.props.isCurrentWindow;
+  renderSingleTab(item, index) {
+    const {isCurWindow} = this.props;
+    const isSelected = item.highlighted && isCurWindow;
     return (
       <List.Item
-        className={`tab-item-container ${isSelected ? 'selected' : ''}`}
+        key={index}
+        className={`domain-item-container ${isSelected ? 'selected' : ''}`}
         onClick={() => this.onClick(item)}
       >
         <Avatar
@@ -142,14 +166,14 @@ class WindowItem extends React.PureComponent {
         <Typography.Text
           ellipsis
           strong={isSelected}
-          className={'tab-item-title-text'}
+          className={'domain-item-title-text'}
         >
           {item.title}
         </Typography.Text>
         <Button
           type={'primary'}
           className={'close-btn'}
-          onClick={evt => this.onClickRemove(evt, item)}
+          onClick={evt => this.onClickRemove(evt, item.id)}
         >
           <Icon type={'close'} className={'close-icon'}/>
         </Button>
@@ -157,15 +181,44 @@ class WindowItem extends React.PureComponent {
     );
   }
 
+  renderMultipleTabs() {
+    const {tabs, domain, isCurWindow, isCurDomain} = this.props;
+    const isSelected = isCurWindow && isCurDomain;
+    return (
+      <Collapse
+        expandIconPosition={'left'}
+        className={'multiple-domain-item'}
+        defaultActiveKey={isSelected ? ['0'] : undefined}
+        expandIcon={({isActive}) => <Icon type="caret-right" rotate={isActive ? 90 : 0} />}
+      >
+        <Collapse.Panel
+          header={(
+            <Row className={'window-header-container'}>
+              <span className={'domain-header-title-text'}>{domain}</span>
+              <Button
+                type={'primary'}
+                className={'close-btn'}
+                onClick={evt => this.onClickRemove(evt, tabs.map(tab => tab.id))}
+              >
+                <Icon type={'close'} className={'close-icon'}/>
+              </Button>
+            </Row>
+          )}
+        >
+          <div className={'window-item-container'}>
+            {tabs.map((item, index) => this.renderSingleTab(item, index))}
+          </div>
+        </Collapse.Panel>
+      </Collapse>
+    );
+  }
+
   render() {
     const {tabs} = this.props;
-    return (
-      <List
-        size={'small'}
-        dataSource={tabs}
-        className={'window-item-container'}
-        renderItem={this.renderItem}
-      />
-    );
+    if(tabs.length > 1) {
+      return this.renderMultipleTabs();
+    } else {
+      return this.renderSingleTab(tabs[0]);
+    }
   }
 }

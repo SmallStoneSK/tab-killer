@@ -1,11 +1,18 @@
-/** override antd css */
+/** overriding antd css */
 .ant-collapse {
+  border: none;
   border-radius: 0;
 }
 
 .ant-collapse-header {
+  border-radius: 0;  
   background-color: #F5F5F5;
 }
+
+.ant-collapse-content {
+  border-radius: 0;
+}
+/** end of overriding antd css */
 
 .app-container {
   width: 300px;
@@ -61,29 +68,48 @@
   margin: -16px;
 }
 
-.tab-item-container {
+.multiple-domain-item .ant-collapse-header {
+  background-color: #FFF;
+}
+
+.multiple-domain-item .ant-collapse-content.ant-collapse-content-active {
+  background-color: #F8F8F8;
+}
+
+.domain-item-container {
   position: relative;
   display: flex;
   align-items: center;
   padding: 0 12px;
 }
 
-.tab-item-container:hover {
+.domain-item-container:hover {
   cursor: pointer;
   background-color: rgba(63, 146, 247, 0.1);
 }
 
-.tab-item-title-text {
+.domain-item-title-text {
   margin-left: 8px;
   max-width: 210px;
   font-size: 12px;
 }
 
-.tab-item-container.selected {
+.domain-header-title-text {
+  display: block;
+  margin-left: -2px;
+  max-width: 210px;
+  font-size: 12px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.domain-item-container.selected {
   background-color: rgba(63, 146, 247, 1);
 }
 
-.tab-item-container.selected .tab-item-title-text {
+.domain-item-container.selected .domain-item-title-text {
   color: #FFF;
 }
 
@@ -100,11 +126,18 @@
   transition: 200ms opacity background-color ease-in-out;
 }
 
+.window-header-container .close-btn {
+  top: -6px;
+  bottom: -6px;
+  right: -16px;
+}
+
 .close-btn:hover {
   background-color: rgba(236, 91, 86, 1);
 }
 
-.tab-item-container:hover .close-btn {
+.window-header-container:hover .close-btn,
+.domain-item-container:hover .close-btn {
   opacity: 1;
 }
 
