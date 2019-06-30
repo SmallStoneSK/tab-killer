@@ -31,6 +31,10 @@ git clone https://github.com/SmallStoneSK/tab-killer.git
 |Windows|`Ctrl`+`Shift`+`A`|
 |MacOS|`Command`+`Shift`+`A`|
 
+**PS:**
+
+如果快捷键发生冲突，您可以修改[manifest.json](https://github.com/SmallStoneSK/tab-killer/blob/master/manifest.json#L25)中的`commands`字段值。
+
 ## License
 
 [MIT协议](./LICENSE)
