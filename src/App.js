@@ -168,7 +168,18 @@ const Helper = {
       });
     });
 
-    // 进行排序，将当前窗口的顺序往上提，保证更好的体验
+    // 进行排序，将域名合并的tabs和当前窗口的顺序尽量往上提，保证更好的体验
+    data.forEach(window => {
+      window.domains.sort((domainA, domainB) => {
+        if(domainA.tabs.length > 1 && domainB.tabs.length === 1) {
+          return -1;
+        } else if(domainB.tabs.length > 1 && domainA.tabs.length === 1) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+    })
     data.sort((winA, winB) => {
       if(winA.isCurWindow) {
         return -1;
