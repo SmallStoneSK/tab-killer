@@ -28,8 +28,8 @@ git clone https://github.com/SmallStoneSK/tab-killer.git
 
 |平台|快捷键|
 |---|------|
-|Windows|`Ctrl`+`A`|
-|MacOS|`Command`+`A`|
+|Windows|`Ctrl`+`Shift`+`A`|
+|MacOS|`Command`+`Shift`+`A`|
 
 ## License
 

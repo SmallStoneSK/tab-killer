@@ -25,8 +25,8 @@
   "commands": {
     "_execute_browser_action": {
       "suggested_key": {
-        "windows": "Ctrl+A",
-        "mac": "Command+A"
+        "windows": "Ctrl+Shift+A",
+        "mac": "Command+Shift+A"
       }
     }
   }
