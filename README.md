@@ -22,6 +22,15 @@ git clone https://github.com/SmallStoneSK/tab-killer.git
 
 ![guid](./preview/guide.png)
 
+3. 快捷键
+
+你可以通过`快捷键`而不是点击图标的方式来启动插件：
+
+|平台|快捷键|
+|---|------|
+|Windows|`Ctrl`+`A`|
+|MacOS|`Command`+`A`|
+
 ## License
 
 [MIT协议](./LICENSE)

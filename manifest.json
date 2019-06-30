@@ -21,5 +21,13 @@
     },
     "default_title": "Tab Killer",
     "default_popup": "./popup.html"
+  },
+  "commands": {
+    "_execute_browser_action": {
+      "suggested_key": {
+        "windows": "Ctrl+A",
+        "mac": "Command+A"
+      }
+    }
   }
 }
