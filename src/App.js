@@ -52,14 +52,33 @@ export default class App extends React.PureComponent {
   onRemoveTab = data => {
     const {tabsData} = this.state;
     for(let i = 0, len = tabsData.length; i < len; i++) {
-      const {tabs} = tabsData[i];
-      const filtered = tabs.filter(tab => tab !== data);
-      if(filtered.length < tabs.length) {
-        const newData = {...tabsData[i], tabs: filtered};
-        const newTabsData = tabsData.slice(0);
-        newTabsData[i] = newData;
-        this.setState({tabsData: newTabsData});
-        break;
+      const {domains} = tabsData[i];
+      for(let j = 0, l = domains.length; j < l; j++) {
+        const filtered = domains[j].tabs.filter(tab => {
+          if(Array.isArray(data)) {
+            return data.findIndex(item => tab.id === item.id) === -1;
+          } else {
+            return tab.id !== data.id;
+          }
+        });
+        if(filtered.length < domains[j].tabs.length) {
+
+          // 构造新的domain分组
+          const newDomain = {...domains[j], tabs: filtered};
+          const newDomains = domains.slice(0);
+          if(newDomain.tabs.length > 0) {
+            newDomains[j] = newDomain;
+          } else {
+            newDomains.splice(j, 1);
+          }
+
+          // 构造新的窗口分组
+          const newData = {...tabsData[i], domains: newDomains};
+          const newTabsData = tabsData.slice(0);
+          newTabsData[i] = newData;
+          this.setState({tabsData: newTabsData});
+          return;
+        }
       }
     }
   }
@@ -99,10 +118,10 @@ const Helper = {
   },
   extractDomain(url) {
     if(typeof url !== 'string') {
-      return 'unknown';
+      return 'UnKnown';
     }
     const ret = url.match(/(https?:\/\/[^/]+)/);
-    return ret ? ret[1] : 'unknown';
+    return ret ? ret[1] : 'UnKnown';
   },
   convertTabsData(allTabs = [], currentTab = {}) {
 

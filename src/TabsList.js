@@ -119,8 +119,14 @@ export class TabsList extends React.PureComponent {
 class WindowItem extends React.PureComponent {
 
   renderItem = item => {
-    const {isCurWindow} = this.props;
-    return <DomainItem {...item} isCurWindow={isCurWindow}/>;
+    const {isCurWindow, onRemove} = this.props;
+    return (
+      <DomainItem
+        {...item}
+        isCurWindow={isCurWindow}
+        onRemove={onRemove}
+      />
+    );
   }
 
   render() {
@@ -143,9 +149,10 @@ class DomainItem extends React.PureComponent {
     chrome.tabs.highlight({tabs: item.index, windowId: item.windowId});
   }
 
-  onClickRemove = (evt, ids) => {
+  onClickRemove = (evt, item) => {
     evt.stopPropagation();
-    chrome.tabs.remove(ids);
+    const id = Array.isArray(item) ? item.map(_ => _.id) : item.id;
+    chrome.tabs.remove(id);
     this.props.onRemove(item);
   }
 
@@ -173,7 +180,7 @@ class DomainItem extends React.PureComponent {
         <Button
           type={'primary'}
           className={'close-btn'}
-          onClick={evt => this.onClickRemove(evt, item.id)}
+          onClick={evt => this.onClickRemove(evt, item)}
         >
           <Icon type={'close'} className={'close-icon'}/>
         </Button>
@@ -198,7 +205,7 @@ class DomainItem extends React.PureComponent {
               <Button
                 type={'primary'}
                 className={'close-btn'}
-                onClick={evt => this.onClickRemove(evt, tabs.map(tab => tab.id))}
+                onClick={evt => this.onClickRemove(evt, tabs)}
               >
                 <Icon type={'close'} className={'close-icon'}/>
               </Button>
